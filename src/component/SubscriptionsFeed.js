@@ -4,6 +4,7 @@ import { Box, Typography, Avatar, Stack } from '@mui/material';
 import Videos from './Videos';
 import Loader from './Loader';
 import { fetchFromAPI } from '../utils/fetchFromAPI';
+import { decodeEntities } from '../utils/helpers';
 import {
   getSubscriptions,
   onSubscriptionsChange,
@@ -69,7 +70,7 @@ export default function SubscriptionsFeed() {
             >
               <Avatar
                 src={channel.thumbnail}
-                alt={channel.title}
+                alt={decodeEntities(channel.title)}
                 sx={{
                   width: 72,
                   height: 72,
@@ -89,7 +90,7 @@ export default function SubscriptionsFeed() {
                   whiteSpace: 'nowrap',
                 }}
               >
-                {channel.title}
+                {decodeEntities(channel.title)}
               </Typography>
             </Link>
           ))}
