@@ -76,7 +76,7 @@ export default async function handler(req, res) {
   }
 
   const raw = Array.isArray(req.query.u) ? req.query.u[0] : req.query.u;
-  if (!raw || raw.length > 500) {
+  if (!raw || raw.length > 2500) {
     return res.status(400).json({ error: 'Missing or invalid u parameter' });
   }
 
