@@ -6,7 +6,7 @@
 const UPSTREAM = 'https://youtube-v31.p.rapidapi.com';
 const HOST = 'youtube-v31.p.rapidapi.com';
 
-const PART = /^[a-z]+(,[a-z]+)*$/;
+const PART = /^[a-zA-Z]+(,[a-zA-Z]+)*$/;
 const ID_LIST = /^[A-Za-z0-9_-]+(,[A-Za-z0-9_-]+){0,49}$/;
 const MAX_RESULTS = /^\d{1,3}$/;
 
