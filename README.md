@@ -1,70 +1,42 @@
-# Getting Started with Create React App
+# YouTube Clone
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A YouTube-style video app built with React (Create React App) and Material UI,
+powered by the [youtube-v31](https://rapidapi.com/ytdlfree/api/youtube-v31)
+RapidAPI. Live at https://youtube-clone-three-lyart.vercel.app/
 
-## Available Scripts
+## Features
 
-In the project directory, you can run:
+- Home feed by category, search, channel pages, and video pages
+- Video duration badges on every thumbnail
+- Click a channel avatar to open the channel page
+- Subscribe to channels (stored in your browser via localStorage) and see
+  their latest videos on the Following page
 
-### `npm start`
+## Architecture
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- `src/` - React SPA, deployed as a static build on Vercel
+- `api/youtube.js` - Vercel serverless function that proxies the RapidAPI.
+  The API key stays server-side; the browser bundle never contains it.
+  The proxy only allows the `search`, `videos`, and `channels` endpoints,
+  validates parameters, caps `maxResults` at 50, rate-limits per IP, and
+  caches responses on the Vercel CDN to stretch the free plan's quota.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+## Local development
 
-### `npm test`
+```bash
+npm install
+cp .env.example .env   # then put your RapidAPI key in .env
+npm start
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+The app calls RapidAPI directly when `REACT_APP_RAPID_API_KEY` is present
+(local dev only). Without it, calls go to `/api/youtube`, which only exists
+on the Vercel deployment - so a local `.env` is required for `npm start`.
 
-### `npm run build`
+## Deployment (Vercel)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
-
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
-
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
-
-### `npm run eject`
-
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
-
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
-
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
-
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
-
-## Learn More
-
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+- Pushes to `main` deploy automatically.
+- Required environment variable: `RAPIDAPI_KEY` (server-side secret used by
+  `api/youtube.js`). Do not add `REACT_APP_*` variables with secrets - they
+  ship to the browser.
+- Node.js version is set to 22.x in the project settings.
